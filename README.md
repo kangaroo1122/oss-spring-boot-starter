@@ -51,6 +51,13 @@ kangaroohy:
 ```java
     @Autowired
     private OssTemplate ossTemplate;
+
+    @PostMapping("/upload")
+    @Operation(summary = "普通上传")
+    public RestResult<String> upload(MultipartFile file) throws IOException {
+        ossTemplate.putObject(bucketName, file.getOriginalFilename(), file.getContentType(), file.getInputStream());
+        return RestResult.ok();
+    }
 ```
 
 封装方法不满足时，可自行注入 AmazonS3 ，调用原始方法
