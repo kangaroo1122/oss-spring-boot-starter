@@ -14,4 +14,9 @@ public class OssConstant {
      * 配置前缀
      */
     public static final String PREFIX = "kangaroohy.oss";
+
+    /**
+     * url分隔符
+     */
+    public static final String URI_DELIMITER = "/";
 }

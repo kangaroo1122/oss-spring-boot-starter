@@ -1,5 +1,7 @@
 package com.kangaroohy.oss.utils;
 
+import com.kangaroohy.oss.constant.OssConstant;
+
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.time.Duration;
@@ -66,6 +68,23 @@ public class CustomUtil {
         }
     }
 
+    /**
+     * 如果 objectName 以 / 开始，去掉第一个路径符
+     *
+     * @param objectName 文件名称
+     * @return
+     */
+    public static String getObjectName(String objectName) {
+        return objectName.length() > 1 && objectName.startsWith(OssConstant.URI_DELIMITER) ? objectName.substring(1) : objectName;
+    }
+
+    /**
+     * endpoint 转 virtual-host-style
+     *
+     * @param endpoint
+     * @param bucketName
+     * @return
+     */
     public static URI convertToVirtualHostEndpoint(URI endpoint, String bucketName) {
         try {
             return new URI(String.format("%s://%s.%s", endpoint.getScheme(), bucketName, endpoint.getAuthority()));
