@@ -144,6 +144,9 @@ public class UploadPartInfoBO {
 
 思路：前端请求后端，获取各个分片预签名 url，直接 PUT 方式请求上传 oss 服务器，上传完成，请求后端合并分片
 
+> `getPresignedMultipartUploadUrls` 一次返回所有分片预签名地址
+> `getPresignedMultipartUploadUrlsByPartNumbers` 返回指定分片预签名地址
+
 ~~~java
     @GetMapping("/part-url")
     @Operation(summary = "获取分片直传地址")
