@@ -32,6 +32,8 @@ import java.util.concurrent.TimeUnit;
 @Service
 public class OssTemplate {
 
+    private static final String APPLICATION_OCTET_STREAM = "application/octet-stream";
+
     private final OssProperties ossProperties;
 
     private final AmazonS3 amazonS3;
@@ -107,20 +109,23 @@ public class OssTemplate {
     /**
      * 获取全部bucket
      *
-     * @see AmazonS3#listBuckets()
+     * @see AmazonS3#listBuckets(ListBucketsPaginatedRequest listBucketsPaginatedRequest)
      */
     public List<Bucket> getAllBuckets() {
-        return amazonS3.listBuckets();
+        return amazonS3.listBuckets(new ListBucketsPaginatedRequest()).getBuckets();
     }
 
     /**
      * 获取指定bucket
      *
      * @param bucketName bucket名称
-     * @see AmazonS3#listBuckets()
+     * @see AmazonS3#listBuckets(ListBucketsPaginatedRequest listBucketsPaginatedRequest)
      */
     public Optional<Bucket> getBucket(String bucketName) {
-        return amazonS3.listBuckets().stream().filter(b -> b.getName().equals(bucketName)).findFirst();
+        ListBucketsPaginatedRequest request = new ListBucketsPaginatedRequest();
+        request.setPrefix(bucketName);
+        return amazonS3.listBuckets(request)
+                .getBuckets().stream().filter(b -> b.getName().equals(bucketName)).findFirst();
     }
 
     /**
@@ -319,7 +324,7 @@ public class OssTemplate {
      * @see AmazonS3#putObject(PutObjectRequest putObjectRequest)
      */
     public PutObjectResult putObject(String bucketName, String objectName, InputStream stream) throws IOException {
-        return putObject(bucketName, objectName, stream, stream.available(), "application/octet-stream");
+        return putObject(bucketName, objectName, stream, stream.available(), APPLICATION_OCTET_STREAM);
     }
 
     /**
@@ -432,7 +437,7 @@ public class OssTemplate {
      * @see AmazonS3#generatePresignedUrl(GeneratePresignedUrlRequest presignedUrlRequest)
      */
     public MultiPartUploadInfo getPresignedMultipartUploadUrls(String objectName, Integer partSize) {
-        return getPresignedMultipartUploadUrls(objectName, partSize, "application/octet-stream");
+        return getPresignedMultipartUploadUrls(objectName, partSize, APPLICATION_OCTET_STREAM);
     }
 
     /**
@@ -528,7 +533,7 @@ public class OssTemplate {
      * @see AmazonS3#generatePresignedUrl(GeneratePresignedUrlRequest presignedUrlRequest)
      */
     public MultiPartUploadInfo getPresignedMultipartUploadUrlsByPartNumbers(String uploadId, String objectName, List<Integer> partNumbers) {
-        return getPresignedMultipartUploadUrlsByPartNumbers(uploadId, objectName, partNumbers, "application/octet-stream");
+        return getPresignedMultipartUploadUrlsByPartNumbers(uploadId, objectName, partNumbers, APPLICATION_OCTET_STREAM);
     }
 
     /**
